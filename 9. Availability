@@ -1,0 +1,255 @@
+# 🧠 1. What is Availability?
+
+Availability refers to the **percentage of time a system is operational and accessible** when users need it.
+
+👉 It tells us:
+
+* How reliable a system is
+* How often it is up vs down
+
+## 🎯 Formal Definition
+
+[
+\text{Availability} = \frac{\text{Uptime}}{\text{Uptime + Downtime}}
+]
+
+## 📌 Key Terms
+
+### ⏱️ Uptime
+
+* Time when system is working normally
+
+### ❌ Downtime
+
+* Time when system is unavailable
+* Causes:
+
+  * Server failures
+  * Network issues
+  * Maintenance
+
+## ⚠️ Why Availability Matters?
+
+* Users expect systems to **always be available**
+* Downtime = ❌ revenue loss + ❌ bad user experience
+* Critical systems (banking, healthcare) require **very high availability**
+
+# 📊 2. Availability Tiers ("Nines")
+
+Availability is expressed using **"nines"**
+
+👉 More nines = less downtime
+
+
+## 📈 Availability Table
+
+| Availability | Downtime / Year | Common Name |
+| ------------ | --------------- | ----------- |
+| 99%          | ~3.65 days      | Two nines   |
+| 99.9%        | ~8.76 hours     | Three nines |
+| 99.99%       | ~52.56 minutes  | Four nines  |
+| 99.999%      | ~5.26 minutes   | Five nines  |
+| 99.9999%     | ~31.5 seconds   | Six nines   |
+
+
+## 🎯 Key Insight
+
+> Each extra "9" reduces downtime by **10x**
+
+
+
+# ⚙️ 3. Strategies to Improve Availability
+
+
+# 🔁 1. Redundancy
+
+Having **backup components** to take over if something fails
+
+
+## 🔧 Types of Redundancy
+
+### 🖥️ Server Redundancy
+
+* Multiple servers running same service
+
+### 🗄️ Database Redundancy
+
+* Primary + replica database
+
+### 🌍 Geographic Redundancy
+
+* Multiple regions/data centers
+
+
+## ✅ Benefit:
+
+* No single point of failure
+
+
+
+# ⚖️ 2. Load Balancing
+
+Distribute traffic across multiple servers
+
+
+## 🔁 Flow:
+
+```id="lbflow"
+Client → Load Balancer → Multiple Servers
+```
+
+
+## ✅ Benefits:
+
+* Prevent overload
+* Improve availability
+* Better performance
+
+
+
+# 🔄 3. Failover Mechanisms
+
+Automatically switch to backup system when failure occurs
+
+
+## 🔧 Types:
+
+### 🔹 Active-Passive
+
+* One active, one standby
+
+### 🔹 Active-Active
+
+* All nodes active
+
+
+## 🎯 Goal:
+
+* Zero downtime switching
+
+
+
+# 📦 4. Data Replication
+
+Copy data across multiple systems
+
+
+## 🔧 Types:
+
+### ⚡ Synchronous Replication
+
+* Real-time copy
+* Strong consistency
+
+### ⏳ Asynchronous Replication
+
+* Delayed copy
+* Better performance
+
+
+## ⚖️ Trade-off:
+
+* Consistency vs Performance
+
+
+
+# 🔍 5. Monitoring & Alerts
+
+Continuously track system health
+
+
+## 🔧 Techniques:
+
+### ❤️ Heartbeats
+
+* Signals to check if system is alive
+
+### 🩺 Health Checks
+
+* Automated system checks
+
+### 🚨 Alerts
+
+* Notify engineers on failure
+
+
+## 📌 Tools:
+
+* PagerDuty
+* OpsGenie
+
+
+
+# 🧠 4. Best Practices for High Availability
+
+
+## 🔥 1. Design for Failure
+
+> Assume everything will fail at some point
+
+
+## 🔍 2. Health Checks
+
+* Detect issues early
+
+
+## 🌍 3. Multi-AZ Deployment
+
+* Use multiple data centers
+
+
+## 🧪 4. Chaos Engineering
+
+* Intentionally break system to test resilience
+
+
+## 🔌 5. Circuit Breaker Pattern
+
+* Stop cascading failures
+
+
+## ⚡ 6. Use Caching
+
+* Reduce load on backend
+
+
+## 📊 7. Capacity Planning
+
+* Handle traffic spikes
+
+
+
+# ⚔️ 5. Active-Passive vs Active-Active
+
+| Feature     | Active-Passive | Active-Active |
+| ----------- | -------------- | ------------- |
+| Nodes       | One active     | All active    |
+| Cost        | Lower          | Higher        |
+| Failover    | Slower         | Instant       |
+| Performance | Limited        | High          |
+
+# 🚀 6. Real-World Architecture (High Availability)
+
+```id="ha-arch"
+User
+  ↓
+CDN
+  ↓
+Load Balancer
+  ↓
+Multiple App Servers
+  ↓
+Replicated Database
+  ↓
+Backup Region
+```
+
+# ⚡ 7. Availability vs Reliability
+
+| Feature | Availability       | Reliability            |
+| ------- | ------------------ | ---------------------- |
+| Meaning | System is up       | System works correctly |
+| Focus   | Uptime             | Correctness            |
+| Example | Website accessible | Correct data returned  |
+
+
