@@ -57,8 +57,7 @@ Availability is expressed using **"nines"**
 > Each extra "9" reduces downtime by **10x**
 
 
-
-# ⚙️ 3. Strategies to Improve Availability
+# ⚙️ 3. Strategies to Improve Availability:-
 
 
 # 🔁 1. Redundancy
@@ -86,7 +85,6 @@ Having **backup components** to take over if something fails
 * No single point of failure
 
 
-
 # ⚖️ 2. Load Balancing
 
 Distribute traffic across multiple servers
@@ -104,7 +102,6 @@ Client → Load Balancer → Multiple Servers
 * Prevent overload
 * Improve availability
 * Better performance
-
 
 
 # 🔄 3. Failover Mechanisms
@@ -128,7 +125,6 @@ Automatically switch to backup system when failure occurs
 * Zero downtime switching
 
 
-
 # 📦 4. Data Replication
 
 Copy data across multiple systems
@@ -150,7 +146,6 @@ Copy data across multiple systems
 ## ⚖️ Trade-off:
 
 * Consistency vs Performance
-
 
 
 # 🔍 5. Monitoring & Alerts
@@ -179,8 +174,7 @@ Continuously track system health
 * OpsGenie
 
 
-
-# 🧠 4. Best Practices for High Availability
+# 🧠 4. Best Practices for High Availability:-
 
 
 ## 🔥 1. Design for Failure
@@ -218,7 +212,6 @@ Continuously track system health
 * Handle traffic spikes
 
 
-
 # ⚔️ 5. Active-Passive vs Active-Active
 
 | Feature     | Active-Passive | Active-Active |
@@ -253,3 +246,11 @@ Backup Region
 | Example | Website accessible | Correct data returned  |
 
 
+#⚡ 8.   Scalability vs Availability
+
+| Feature      | Scalability 🚀           | Availability 🔄 |
+| ------------ | ------------------------ | --------------- |
+| Focus        | Handle more load         | Stay online     |
+| Goal         | Performance under growth | No downtime     |
+| Example      | Add servers              | Backup servers  |
+| Failure case | Slow system              | System down     |
