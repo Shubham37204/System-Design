@@ -9,9 +9,7 @@ Availability refers to the **percentage of time a system is operational and acce
 
 ## 🎯 Formal Definition
 
-[
-\text{Availability} = \frac{\text{Uptime}}{\text{Uptime + Downtime}}
-]
+Availability = Uptimet / Uptime + Downtime
 
 ## 📌 Key Terms
 
