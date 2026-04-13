@@ -1,0 +1,254 @@
+# 🧠 1. What is CAP Theorem?
+
+The **CAP Theorem** was introduced by **Eric Brewer (2000)**.
+
+It states:
+
+> In a distributed system, it is **impossible to guarantee all three**:
+> **Consistency (C), Availability (A), and Partition Tolerance (P)** at the same time.
+
+
+## 🎯 Core Idea
+
+👉 You can only choose **2 out of 3**:
+
+* Consistency (C)
+* Availability (A)
+* Partition Tolerance (P)
+
+
+# 🧩 2. The Three Pillars of CAP
+
+# 🟢 1. Consistency (C)
+
+Every read gets the **latest write** or an error.
+
+## 📌 Meaning:
+
+* All nodes show the **same data**
+* No stale or outdated data
+
+## 🔁 Example:
+
+```id="consistency"
+Write → Node A  
+Read → Node B → SAME latest data
+```
+
+## 📍 Real-World Example:
+
+* Banking systems
+* Payment systems
+
+👉 Balance must always be correct
+
+# 🟡 2. Availability (A)
+
+Every request receives a **response**, even if it’s not the latest data.
+
+## 📌 Meaning:
+
+* System is always responsive
+* No errors
+
+## 🔁 Example:
+
+```id="availability"
+Request → System → Always responds
+```
+
+## 📍 Real-World Example:
+
+* Amazon cart
+* Social media feeds
+
+👉 Better to show slightly old data than fail
+
+# 🔵 3. Partition Tolerance (P)
+
+System continues to work even if **network failures occur**
+
+
+## 📌 Meaning:
+
+* Nodes can’t communicate
+* System still runs
+
+## 🔁 Example:
+
+```id="partition"
+Node A ❌ Node B (network failure)
+System still operates
+```
+
+## 🎯 Key Insight
+
+> In distributed systems, **Partition Tolerance is NOT optional**
+
+# ⚔️ 3. The CAP Trade-Off
+
+## 🚨 Important Rule
+
+> When a **network partition happens**, you must choose:
+> 👉 **Consistency OR Availability**
+
+# 🔴 1. CP System (Consistency + Partition Tolerance)
+
+## 🎯 Behavior:
+
+* Always correct data
+* May reject requests
+
+
+## ❌ Trade-off:
+
+* Reduced availability
+
+## 📌 Example:
+
+* Banking systems
+* MySQL (strong consistency mode)
+
+
+## 🧠 Scenario:
+
+```id="cp"
+Network issue → System blocks requests  
+Ensures correct data
+```
+
+# 🟢 2. AP System (Availability + Partition Tolerance)
+
+## 🎯 Behavior:
+
+* Always responds
+* Data may be inconsistent
+
+
+## ❌ Trade-off:
+
+* Possible stale data
+
+## 📌 Example:
+
+* Cassandra
+* DynamoDB
+* Amazon shopping cart
+
+## 🧠 Scenario:
+
+```id="ap"
+Network issue → System still responds  
+Data may differ across nodes
+```
+
+# ⚪ 3. CA System (Consistency + Availability)
+
+## 🎯 Behavior:
+
+* Correct data
+* Always available
+
+## ❌ Problem:
+
+* ❌ Not possible with partitions
+
+## 📌 Example:
+
+* Single-node systems
+
+
+# 📊 4. CAP Summary Table
+
+| Type | Consistency | Availability | Partition Tolerance | Use Case      |
+| ---- | ----------- | ------------ | ------------------- | ------------- |
+| CP   | ✅           | ❌            | ✅                   | Banking       |
+| AP   | ❌           | ✅            | ✅                   | Social media  |
+| CA   | ✅           | ✅            | ❌                   | Single server |
+
+
+# 🧠 5. Real-World Understanding
+
+## 🔥 Key Insight
+
+👉 In real systems:
+
+> **You always choose between CP or AP**
+
+Because:
+👉 Network failures (P) are inevitable
+
+## 🧩 Example: Network Partition
+
+```id="partition2"
+User → Node A ❌ Node B
+```
+
+Now system must choose:
+
+* Stop responses → Consistency (CP)
+* Continue responses → Availability (AP)
+
+# ⚙️ 6. Practical Design Strategies
+
+## 🔄 1. Eventual Consistency
+
+* Data becomes consistent **over time**
+
+## 📌 Example:
+
+* DNS
+* CDN
+
+## ⚡ 2. Strong Consistency
+
+* Always latest data
+
+## 📌 Example:
+
+* Banking systems
+
+
+## 🎛️ 3. Tunable Consistency
+
+* Choose consistency level per request
+
+
+## 📌 Example:
+
+* Cassandra
+
+## 🗳️ 4. Quorum-Based Systems
+
+* Majority nodes agree
+
+## 📌 Used in:
+
+* Paxos
+* Raft
+
+
+# 🚀 7. Beyond CAP — PACELC (Advanced 🔥)
+
+## 📌 Problem with CAP:
+
+* Only talks about failures
+
+
+## 🧠 PACELC Theorem:
+
+> If Partition (P): choose Availability (A) or Consistency (C)
+> Else (E): choose Latency (L) or Consistency (C)
+
+## 🎯 Meaning:
+
+* Even without failure → trade-offs exist
+
+# 🧠 8.CAP vs Availability vs Scalability
+
+| Concept      | Meaning        |
+| ------------ | -------------- |
+| CAP          | Trade-off rule |
+| Availability | System uptime  |
+| Scalability  | Handle growth  |
+
