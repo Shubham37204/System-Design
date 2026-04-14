@@ -1,0 +1,254 @@
+# 🧠 1. What is a Database Transaction?
+
+A **transaction** is a sequence of operations (insert, update, delete) treated as **one single unit of work**.
+
+## 🎯 Core Idea
+
+> A transaction either **fully succeeds (COMMIT)** or **fully fails (ROLLBACK)**
+> 👉 No partial execution allowed
+
+
+## 📦 Example: Bank Transfer
+
+When transferring money:
+
+1. Deduct money from Account A
+2. Add money to Account B
+
+
+### ❌ Without Transactions:
+
+* Money deducted ❌
+* Money not added ❌
+
+👉 Inconsistent system
+
+### ✅ With Transactions:
+
+```sql id="txn1"
+BEGIN;
+
+UPDATE accounts SET balance = balance - 500 WHERE id = 'A';
+UPDATE accounts SET balance = balance + 500 WHERE id = 'B';
+
+COMMIT;
+```
+
+👉 Either both succeed OR both fail
+
+
+# ⚠️ Why Transactions are Important?
+
+* Prevent data inconsistency
+* Handle concurrent users
+* Ensure reliable operations
+* Avoid partial updates
+
+
+# 🧩 2. ACID Properties
+
+Transactions are governed by **ACID properties**:
+
+* Atomicity
+* Consistency
+* Isolation
+* Durability
+
+
+# 🔴 2.1. Atomicity
+
+## 🎯 Definition
+
+> All operations in a transaction happen **completely or not at all**
+
+
+## 📌 Example
+
+* Debit succeeds
+* Credit fails
+
+👉 Entire transaction is rolled back
+
+## 🛠️ How It Works
+
+### 1. Write-Ahead Logging (WAL)
+
+* Changes recorded before execution
+
+### 2. Commit / Rollback
+
+```sql id="txn2"
+BEGIN;
+-- operations
+ROLLBACK;
+```
+
+## 🎯 Key Insight
+
+> Prevents **partial updates**
+
+# 🟢 2.2 Consistency
+
+## 🎯 Definition
+
+> Database moves from **one valid state → another valid state**
+
+## 📌 Example
+
+* Cannot order more items than stock
+
+👉 Transaction fails if rule breaks
+
+
+## 🛠️ Enforced By:
+
+* Constraints (PRIMARY KEY, FOREIGN KEY)
+* Triggers
+* Application logic
+
+## 🎯 Key Insight
+
+> No invalid data allowed
+
+# 🟡 2.3. Isolation
+
+## 🎯 Definition
+
+> Transactions do not interfere with each other
+
+## ⚠️ Problems Without Isolation
+
+
+### ❌ Dirty Read
+
+* Read uncommitted data
+
+
+### ❌ Non-Repeatable Read
+
+* Same query → different results
+
+
+### ❌ Phantom Read
+
+* New rows appear unexpectedly
+
+
+## 🔧 Isolation Levels
+
+### 🔹 Read Uncommitted
+
+* Dirty reads allowed
+
+### 🔹 Read Committed
+
+
+* No dirty reads
+
+### 🔹 Repeatable Read
+
+* Same data across reads
+
+
+### 🔹 Serializable
+
+* Full isolation (most strict)
+
+
+## ⚖️ Trade-off
+
+> Higher isolation = lower performance
+
+
+## 🛠️ Implementation
+
+
+### 🔒 Locking (Pessimistic)
+
+* Locks rows/tables
+
+### 📸 MVCC (Optimistic)
+
+* Multiple versions of data
+* No blocking
+
+
+
+# 🔵 2.4. Durability
+
+## 🎯 Definition
+
+> Once committed → data is **permanently saved**
+
+
+## 📌 Example
+
+* System crashes after commit
+  👉 Data must still exist
+
+
+## 🛠️ How It Works
+
+
+### 📜 1. Write-Ahead Log (WAL)
+
+* Stored on disk
+
+### 🔁 2. Replication
+
+* Multiple copies
+
+### 💾 3. Backups
+
+* Restore in case of failure
+
+
+# ⚔️ 3. ACID Summary Table
+
+| Property    | Meaning         | Purpose                 |
+| ----------- | --------------- | ----------------------- |
+| Atomicity   | All or nothing  | Prevent partial updates |
+| Consistency | Valid state     | Maintain rules          |
+| Isolation   | No interference | Handle concurrency      |
+| Durability  | Permanent data  | Survive failures        |
+
+
+# 🧠 4. Real-World Example
+
+## 🏦 Banking System
+
+```id="bank-arch"
+User → API → Transaction → Database
+```
+
+### Flow:
+
+* Start transaction
+* Debit account
+* Credit account
+* Commit
+
+👉 Ensures ACID
+
+# ⚔️ 5. ACID vs BASE (SQL vs NoSQL)
+
+| Feature      | ACID    | BASE         |
+| ------------ | ------- | ------------ |
+| Consistency  | Strong  | Eventual     |
+| Availability | Lower   | Higher       |
+| Use Case     | Banking | Social media |
+
+
+# 🚀 6. Practical System Design Insight
+
+## 🔥 Where ACID is critical:
+
+* Banking
+* Payments
+* Inventory
+
+## ⚡ Where relaxed consistency is okay:
+
+* Social media
+* Analytics
+* Logs

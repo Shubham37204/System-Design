@@ -1,0 +1,269 @@
+# 🧠 1. Introduction
+
+Databases are the backbone of any system.
+
+👉 There are two major types:
+
+* **SQL (Relational Databases)**
+* **NoSQL (Non-Relational Databases)**
+
+---
+
+## 🎯 Core Difference
+
+> SQL = Structured + Relational
+> NoSQL = Flexible + Distributed
+
+
+# 🧩 2. Data Model
+
+
+## 🟢 SQL (Relational Model)
+
+* Data stored in **tables**
+* Rows = records
+* Columns = attributes
+
+
+## 🔗 Relationships:
+
+* **Primary Key** → unique identifier
+* **Foreign Key** → links tables
+
+
+## 📌 Example:
+
+### Users Table
+
+| UserID | Name | Email |
+| ------ | ---- | ----- |
+
+### Orders Table
+
+| OrderID | UserID | Product |
+
+👉 Connected using foreign key
+
+
+## 🔵 NoSQL (Multiple Models)
+
+
+### 🧱 1. Key-Value (Redis)
+
+```json
+Key: 1  
+Value: { "name": "John", "age": 28 }
+```
+
+👉 Fast lookup, simple use
+
+
+### 📄 2. Document (MongoDB)
+
+```json
+{
+  "_id": 1,
+  "name": "John",
+  "orders": [
+    { "product": "Laptop", "price": 1200 }
+  ]
+}
+```
+
+👉 Nested + flexible
+
+---
+
+### 🧮 3. Column-Family (Cassandra)
+
+* Rows with dynamic columns
+* Optimized for large-scale data
+
+### 🔗 4. Graph (Neo4j)
+
+* Nodes + Edges
+* Best for relationships
+
+
+# 🧱 3. Schema
+
+
+## 🟢 SQL
+
+* Fixed schema (defined beforehand)
+* Strong structure
+
+### ❗ Example:
+
+```sql
+CREATE TABLE Users (
+  UserID INT,
+  Name VARCHAR(100)
+);
+```
+
+
+### ❌ Problem:
+
+* Hard to change schema
+* Requires migrations
+
+## 🔵 NoSQL
+
+* Dynamic / schema-less
+* Flexible structure
+
+### ✅ Example:
+
+```json
+{ "name": "John" }
+{ "name": "Mike", "loyaltyPoints": 500 }
+```
+
+### 🎯 Advantage:
+
+* Easy to evolve data
+
+# 📈 4. Scalability
+
+## 🟢 SQL → Vertical Scaling
+
+```id="sql-scale"
+Single Server → Add more CPU/RAM
+```
+### ❌ Limit:
+
+* Hardware limit
+* Expensive
+
+## 🔵 NoSQL → Horizontal Scaling
+
+```id="nosql-scale"
+Server 1 + Server 2 + Server 3
+```
+
+### ✅ Advantage:
+
+* Highly scalable
+* Distributed system
+
+# 🔍 5. Query Language
+
+## 🟢 SQL
+
+* Standard query language
+* Powerful joins
+
+
+### 📌 Example:
+
+```sql
+SELECT Users.name, Orders.product
+FROM Users
+JOIN Orders ON Users.UserID = Orders.UserID;
+```
+
+## 🔵 NoSQL
+
+* No standard language
+* Depends on database
+
+### 📌 Example (MongoDB):
+
+```js
+db.Users.find({ age: { $gt: 25 } })
+```
+
+# 🔄 6. Transactions
+
+## 🟢 SQL → ACID
+
+### 🔐 ACID Properties:
+
+* Atomicity
+* Consistency
+* Isolation
+* Durability
+
+### 📌 Example:
+
+Bank transfer → all or nothing
+
+## 🔵 NoSQL → BASE
+
+### ⚡ BASE Properties:
+
+* Basically Available
+* Soft State
+* Eventual Consistency
+
+### 🎯 Trade-off:
+
+* High performance
+* Less strict consistency
+
+# ⚡ 7. Performance
+
+## 🟢 SQL
+
+* Great for complex queries
+* Joins, aggregations
+
+
+### ❌ Problem:
+
+* Slower at large scale
+
+
+## 🔵 NoSQL
+
+* Optimized for large-scale systems
+* Faster reads/writes
+
+
+### ✅ Reasons:
+
+* No joins
+* Distributed architecture
+
+# 🎯 8. Use Cases
+
+## 🟢 SQL Best For:
+
+* Banking systems
+* E-commerce transactions
+* ERP systems
+* Structured data
+
+## 🔵 NoSQL Best For:
+
+* Social media
+* Real-time analytics
+* Big data
+* IoT systems
+
+
+# ⚔️ 9. SQL vs NoSQL — Summary Table
+
+| Feature      | SQL             | NoSQL      |
+| ------------ | --------------- | ---------- |
+| Data Model   | Tables          | Flexible   |
+| Schema       | Fixed           | Dynamic    |
+| Scaling      | Vertical        | Horizontal |
+| Query        | Standard SQL    | Custom     |
+| Transactions | ACID            | BASE       |
+| Performance  | Complex queries | High scale |
+| Use Case     | Structured data | Big data   |
+
+
+# 🧠 10. Real-World Architecture
+
+```id="real-arch"
+User
+ ↓
+API Server
+ ↓
+SQL DB (Transactions)
+ ↓
+NoSQL DB (Logs / Cache)
+```
