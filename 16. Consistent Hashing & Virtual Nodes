@@ -1,0 +1,98 @@
+# 🧠 What is Consistent Hashing?
+
+Consistent hashing is a technique used to distribute data across servers in a way that **minimizes data movement when servers are added or removed**.
+Instead of reassigning all data, only a small portion of data gets redistributed.
+
+📌 Example:
+If 1 server is added, only nearby data moves instead of reshuffling everything.
+
+
+# ⚠️ Problem with Traditional Hashing
+
+Traditional hashing uses `hash(key) % N`, so when N changes (add/remove server), **almost all data gets reassigned**.
+This causes cache loss, session loss, and high system load.
+
+📌 Example:
+5 servers → mod 5
+Add 1 server → mod 6 → almost all users shift to new servers
+
+
+# 🔁 How Consistent Hashing Works
+
+Consistent hashing maps both **servers and data (keys)** onto a circular structure called a **hash ring**.
+Each key is assigned to the next server in clockwise direction.
+
+📌 Example:
+Key = 40 → next server at 50 → stored there
+
+
+# 🎯 Key Insight
+
+Only nearby keys move when a server changes, not the entire system.
+This makes it highly scalable and efficient for distributed systems.
+
+
+# ➕ Adding a Server
+
+When a new server is added, it only takes over a **small portion of data from its neighbor**.
+Other servers remain unaffected.
+
+📌 Example:
+New server between S1 and S2 → only S2 loses some data
+
+
+# ➖ Removing a Server
+
+When a server fails, only its data is reassigned to the **next server in the ring**.
+Rest of the system continues normally.
+
+📌 Example:
+S4 fails → its data moves to S3
+
+
+# ⚠️ Problem in Basic Consistent Hashing
+
+If servers are unevenly placed on the ring, **data distribution becomes unbalanced**, creating hotspots.
+Also, when a server fails, its neighbor gets overloaded.
+
+📌 Example:
+If S1 and S2 are close → S3 handles most data
+
+
+# 🧩 What are Virtual Nodes (VNodes)?
+
+Virtual nodes mean each physical server is represented **multiple times on the hash ring**, instead of just once.
+This spreads data more evenly and improves load balancing.
+
+📌 Example:
+Instead of S1 → 1 position
+S1 → S1-1, S1-2, S1-3 (multiple positions)
+
+
+# 🔁 How Virtual Nodes Work
+
+Each server is hashed multiple times and placed at different positions on the ring.
+Requests go to nearest virtual node, which maps back to actual server.
+
+📌 Example:
+Key → hits S1-2 → goes to server S1
+
+
+# 🚀 Why Virtual Nodes are Important
+
+They ensure **even data distribution** and reduce load imbalance across servers.
+They also improve fault tolerance when a server fails.
+
+📌 Example:
+If S1 fails → its load is split across many servers instead of one
+
+
+# ⚔️ Without vs With Virtual Nodes
+
+Without VNodes → uneven distribution + hotspots
+With VNodes → balanced distribution + better scaling
+
+📌 Example:
+Without → S2 overloaded
+With → load shared across S2, S3, S4
+

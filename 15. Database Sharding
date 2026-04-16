@@ -1,0 +1,161 @@
+# 🧠 What is Database Sharding?
+
+Database sharding is a technique where a large database is **split into smaller parts (shards)**, and each shard is stored on a different server.
+Each shard handles only a **subset of data**, so the load is distributed and performance improves.
+
+📌 Example:
+Instead of storing all users in one DB, split like:
+
+* Shard 1 → Users 1–1000
+* Shard 2 → Users 1001–2000
+
+
+# ⚙️ Why Do We Need Sharding?
+
+As data grows, a single database becomes slow and overloaded.
+Sharding distributes data across multiple servers so queries run faster and the system scales easily.
+
+📌 Example:
+Instagram stores billions of users → cannot fit in one DB → uses sharding.
+
+
+# 🔁 How Sharding Works
+
+Sharding works using a **shard key**, which decides where data goes.
+When a query comes, it is routed to the correct shard based on this key.
+
+📌 Example:
+If shard key = user_id
+user_id = 1500 → goes to Shard 2
+
+
+# 🔑 Important Components
+
+Sharding Key: decides data location
+Query Router: sends request to correct shard
+Shard Manager: manages distribution
+
+📌 Example:
+user_id % 2 → decides shard
+
+
+# 🧠 Sharding Strategies
+
+# 🔢 1. Hash-Based Sharding
+
+Data is distributed using a hash function for equal distribution.
+Good for load balancing but hard to query ranges.
+
+📌 Example:
+user_id % 2
+Even → Shard 1
+Odd → Shard 2
+
+
+# 📊 2. Range-Based Sharding
+
+Data is divided based on value ranges like IDs or dates.
+Simple but can create uneven load (hotspots).
+
+📌 Example:
+1–1000 → Shard 1
+1001–2000 → Shard 2
+
+
+# 🌍 3. Geo-Based Sharding
+
+Data is split based on user location.
+Improves latency by keeping data close to users.
+
+📌 Example:
+India users → India server
+US users → US server
+
+
+# 📂 4. Directory-Based Sharding
+
+Uses a lookup table to decide where data is stored.
+Flexible but adds extra complexity.
+
+📌 Example:
+user_id → lookup → shard location
+
+
+# 🚀 Benefits of Sharding
+
+Improves performance by reducing load on one server
+Enables horizontal scaling by adding more shards
+Increases availability since failure of one shard doesn’t crash system
+
+📌 Example:
+If Shard 1 fails → Shard 2 still works
+
+
+# ⚠️ Challenges of Sharding
+
+Adds system complexity
+Difficult to maintain consistency
+Cross-shard queries are slow
+
+📌 Example:
+JOIN between Shard 1 and Shard 2 → expensive
+
+
+# 🧠 Best Practices
+
+Choose shard key carefully → avoid uneven distribution
+Use consistent hashing → easy scaling
+Monitor shards → rebalance when needed
+
+📌 Example:
+Bad key → all traffic goes to one shard → system slows
+
+
+
+Replication vs Sharding
+
+
+# 🧠 What is Replication?
+
+Replication means **copying the same data to multiple servers**, so all replicas have identical data and can serve requests.
+It is mainly used for **high availability and fault tolerance**, not for splitting data.
+
+📌 Example:
+User database is copied to 3 servers
+If one server fails → others still serve the same data
+
+
+# ⚔️ Core Difference
+
+Replication = **Same data everywhere**
+Sharding = **Different data on different servers**
+
+
+# 📊 Key Differences
+
+| Feature           | Replication       | Sharding               |
+| ----------------- | ----------------- | ---------------------- |
+| Data Distribution | Same data         | Split data             |
+| Goal              | High availability | Scalability            |
+| Storage           | Duplicate         | Partitioned            |
+| Failure Handling  | Backup exists     | Only partial data loss |
+| Complexity        | Low               | High                   |
+
+
+# 🚀 When to Use Replication
+
+Use replication when system needs **high availability and reliability**.
+It ensures system continues working even if some servers fail.
+
+📌 Example:
+Banking system → cannot afford downtime
+
+
+# 🚀 When to Use Sharding
+
+Use sharding when system needs **high scalability and large data handling**.
+It allows system to grow by adding more servers.
+
+📌 Example:
+Instagram → billions of users
+
