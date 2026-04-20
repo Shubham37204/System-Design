@@ -1,0 +1,137 @@
+# 🧠 What is Change Data Capture (CDC)?
+
+Change Data Capture (CDC) is a technique used to **detect inserts, updates, and deletes in a database** and send those changes to other systems in real time.
+Instead of running slow batch jobs every few hours, CDC streams changes continuously so downstream systems stay updated.
+
+📌 Example:
+User changes profile email in database → CDC sends event to search index, cache, analytics system instantly.
+
+# ⚠️ Why CDC is Needed
+
+Modern systems use many services like caches, search engines, warehouses, and microservices.
+If only the main database updates and others do not, systems become inconsistent or stale.
+
+📌 Example:
+Product price updated in DB but cache still shows old price → user sees wrong value.
+
+# 🔁 How CDC Works
+
+CDC continuously monitors the source database for data changes.
+When a row changes, it captures what changed and sends that event to consumers.
+
+📌 Flow:
+Database → CDC Tool → Kafka / Queue → Search / Cache / Analytics
+
+# 🧩 Main Steps in CDC
+
+Monitoring: detect changes in DB
+Capturing: collect changed row + metadata
+Delivering: send event to other systems
+
+📌 Example:
+Order status changed from Pending → Shipped → CDC publishes this event.
+
+# 🕒 1. Timestamp-Based CDC
+
+Each table has a `last_updated` column.
+Applications query rows newer than the last sync time.
+
+📌 Example:
+
+```sql id="cdc1"
+SELECT * FROM orders 
+WHERE last_updated > '2024-02-15 12:00:00';
+```
+
+✅ Easy to build
+❌ Can miss deletes and depends on timestamps
+
+# ⚙️ 2. Trigger-Based CDC
+
+Database triggers run automatically after insert/update/delete and store changes in an audit table.
+This gives real-time tracking but adds load to write operations.
+
+📌 Example:
+
+```sql id="cdc2"
+CREATE TRIGGER order_changes
+AFTER UPDATE ON orders
+FOR EACH ROW
+INSERT INTO audit_log VALUES (...);
+```
+
+✅ Immediate capture
+❌ Slower writes in heavy systems
+
+# 📜 3. Log-Based CDC (Best in Modern Systems)
+
+CDC reads the database transaction log (WAL/binlog) and captures every change efficiently.
+Since logs already exist internally, it causes minimal impact on the application.
+
+📌 Example Tools:
+
+* Debezium
+* Kafka Connect
+* AWS DMS
+
+✅ Captures insert/update/delete
+✅ High scale + near real time
+❌ More setup complexity
+
+# 🏆 Why Log-Based CDC is Preferred
+
+It does not require polling tables or running triggers on every write.
+It scales well and accurately captures all database changes.
+
+📌 Example:
+Large e-commerce site with 10,000 writes/sec uses WAL-based CDC.
+
+# 🚀 Real-World Use Cases
+
+# 🧩 1. Microservices Communication
+
+Each service owns its database, but other services need updates.
+CDC publishes DB changes as events so services stay loosely coupled.
+
+📌 Example:
+Order DB updated → CDC sends event → Notification service sends email.
+
+# 📚 2. Event Sourcing / Audit Trail
+
+Every change is stored as an event history.
+Useful for debugging, replaying actions, and compliance.
+
+📌 Example:
+Bank account: deposit, withdrawal, transfer all recorded as events.
+
+# 📊 3. Data Warehousing
+
+CDC streams operational data into warehouse systems for analytics.
+Reports stay near real time instead of waiting nightly batch jobs.
+
+📌 Example:
+Sales dashboard updates every minute from production DB changes.
+
+# ⚡ 4. Cache Invalidation
+
+When source data changes, CDC can refresh or invalidate cache automatically.
+This prevents stale data being served.
+
+📌 Example:
+News article edited → CDC clears Redis cache → readers see latest version.
+
+
+# ⚠️ Challenges in CDC
+
+Schema changes like new columns must be handled carefully.
+High traffic systems need proper scaling, ordering guarantees, and secure handling of sensitive data.
+
+📌 Example:
+If `price` column renamed, consumers must understand new schema.
+
+# 🧠 Best Practices
+
+Use log-based CDC for production scale systems.
+Use message queues like Kafka for buffering and retries.
+Track schema versions and secure sensitive fields.
+
