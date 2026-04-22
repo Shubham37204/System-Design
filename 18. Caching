@@ -1,0 +1,182 @@
+# 🧠 What is Caching?
+
+Caching is a technique where frequently used data is stored in a **fast storage layer (usually RAM)** so it can be accessed quickly later.
+Instead of asking the database every time, the system first checks cache and returns data much faster.
+
+📌 Example:
+Popular product details stored in Redis cache → page loads in milliseconds instead of querying DB each time.
+
+# 🎯 Why Use Caching?
+
+Caching reduces response time, lowers database load, and helps systems handle more users.
+It is one of the easiest ways to improve performance without changing business logic.
+
+📌 Example:
+1000 users request same homepage → serve from cache instead of hitting DB 1000 times.
+
+# 🔁 Basic Flow of Cache
+
+Application first checks cache for data.
+If found, return immediately. If not found, fetch from DB and store in cache.
+
+📌 Example:
+Request product 101 → cache miss → DB fetch → save in cache → next request becomes cache hit.
+
+# 📦 Types of Caching
+
+# 🧠 1. In-Memory Cache
+
+Stores data in RAM for very fast access.
+Used for sessions, frequently accessed objects, counters, and hot data.
+
+📌 Example:
+Redis stores logged-in user session.
+
+# 🌐 2. Distributed Cache
+
+Cache spread across multiple servers so many applications can use it together.
+Useful in large systems where one cache server is not enough.
+
+📌 Example:
+Redis Cluster used by multiple app servers.
+
+# 💻 3. Client-Side Cache
+
+Data stored on user device or browser.
+Used for static files and repeated UI assets.
+
+📌 Example:
+Browser caches CSS, JS, images.
+
+# 🗄️ 4. Database Cache
+
+Stores query results or expensive DB responses.
+Reduces repeated queries to database.
+
+📌 Example:
+Top 10 products query cached for 5 minutes.
+
+# 🌍 5. CDN Cache
+
+Static content stored in global edge servers close to users.
+Reduces latency for users in different countries.
+
+📌 Example:
+Image requested in India served from nearby CDN node.
+
+# 🛠️ Caching Strategies
+
+# 📖 1. Read-Through Cache
+
+Application asks cache first. If data missing, cache fetches from DB automatically.
+Simple for reads and keeps logic centralized.
+
+📌 Example:
+Get user profile → cache loads from DB on miss.
+
+# ✍️ 2. Write-Through Cache
+
+Write goes to cache and DB together.
+Improves consistency but writes become slower.
+
+📌 Example:
+Update profile name → cache + DB both updated instantly.
+
+# 🚀 3. Write-Back Cache
+
+Write goes to cache first, DB updated later asynchronously.
+Very fast writes but risk of data loss if cache crashes before sync.
+
+📌 Example:
+Gaming score updates buffered in cache then flushed later.
+
+# 💤 4. Cache-Aside (Most Common)
+
+Application manages cache manually.
+Read from cache, on miss read DB and populate cache.
+
+📌 Example:
+E-commerce product details loaded lazily into Redis.
+
+# 🗑️ Cache Eviction Policies
+
+# ⏱️ 1. LRU (Least Recently Used)
+
+Removes item not used recently.
+Assumes recently used data is more valuable.
+
+📌 Example:
+Old product page removed when cache full.
+
+# 🔢 2. LFU (Least Frequently Used)
+
+Removes item used least number of times.
+Useful when popularity matters.
+
+📌 Example:
+Rarely opened article removed first.
+
+# 📦 3. FIFO (First In First Out)
+
+Oldest inserted item removed first.
+Simple but less intelligent.
+
+📌 Example:
+First cached image removed first.
+
+# ⌛ 4. TTL (Time To Live)
+
+Each item expires after fixed time.
+Useful when data changes regularly.
+
+📌 Example:
+Stock price cache valid for 30 seconds.
+
+# ⚠️ Common Challenges
+
+# 🧊 1. Cold Start
+
+Cache is empty after restart, so first requests hit DB heavily.
+Can cause temporary slowdown.
+
+📌 Example:
+Redis restarted → traffic suddenly hits MySQL.
+
+# 🔄 2. Cache Invalidation
+
+When source data changes, cache may become stale.
+Keeping cache fresh is one of the hardest problems.
+
+📌 Example:
+Product price changed in DB but cache still shows old price.
+
+# 🚨 3. Cache Stampede
+
+Many users request same missing key at once and all hit DB together.
+This can overload backend.
+
+📌 Example:
+Popular page cache expires during traffic spike.
+
+# 🕳️ 4. Cache Penetration
+
+Requests repeatedly ask for data that does not exist.
+Cache misses keep hitting DB.
+
+📌 Example:
+Bots request invalid product IDs continuously.
+
+# 🧠 Best Practices
+
+Cache expensive and frequently requested data.
+Use TTL to avoid stale data.
+Use layered caching with browser + app cache + CDN.
+
+📌 Example:
+Images from CDN, sessions in Redis, analytics query results in app cache.
+
+# 🚀 Real-World Example
+
+Netflix caches popular movie metadata and thumbnails so users get fast browsing experience.
+Without caching, every request would overload backend databases.
+
