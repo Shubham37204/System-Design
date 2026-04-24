@@ -1,0 +1,139 @@
+# 🧠 What is Cache Eviction?
+
+Cache memory is limited, so when it becomes full, the system must remove some old items to make space for new ones.
+The rule used to decide **which item to remove** is called a cache eviction strategy.
+
+📌 Example:
+Cache size = 3 and contains A, B, C.
+New item D arrives → one item must be removed first.
+
+# 🎯 Why Eviction Strategy Matters
+
+A good eviction policy keeps useful data in cache and removes less useful data.
+This improves cache hit rate, response speed, and reduces database load.
+
+📌 Example:
+If frequently used product data stays in cache, users get faster responses.
+
+# 🔁 1. LRU (Least Recently Used)
+
+LRU removes the item that has **not been used for the longest time**.
+It assumes recently used items are more likely to be used again soon.
+
+📌 Example:
+Cache = [A, B, C]
+Access A → A becomes recent
+Add D → B removed because B was least recently used
+
+✅ Great for web apps and APIs
+❌ Needs tracking of access order
+
+# 🔢 2. LFU (Least Frequently Used)
+
+LFU removes the item with the **lowest usage count**.
+It assumes rarely used items are less important than popular ones.
+
+📌 Example:
+A(5 uses), B(1 use), C(3 uses)
+Add D → B removed because lowest frequency
+
+✅ Good for hot/popular content
+❌ Needs counters and more memory
+
+# 📦 3. FIFO (First In First Out)
+
+FIFO removes the item that entered cache first, regardless of usage.
+It is simple and predictable but ignores access behavior.
+
+📌 Example:
+Cache = [A, B, C]
+Add D → A removed because A entered first
+
+✅ Very simple
+❌ May remove still-useful data
+
+# 🎲 4. Random Replacement (RR)
+
+Random replacement removes any random item when cache is full.
+It uses almost no metadata and is easy to implement.
+
+📌 Example:
+Cache = [A, B, C]
+Add D → randomly B removed
+
+✅ Low overhead
+❌ Can remove important frequently used item
+
+# 🔄 5. MRU (Most Recently Used)
+
+MRU removes the **most recently used** item first.
+It assumes recently used data may not be needed again immediately.
+
+📌 Example:
+Cache = [A, B, C]
+Access C
+Add D → C removed
+
+✅ Useful in some scanning workloads
+❌ Rarely good for normal apps
+
+# ⌛ 6. TTL (Time To Live)
+
+Each cached item gets an expiry time.
+Once time is over, the item is automatically removed even if space exists.
+
+📌 Example:
+User profile cached for 10 minutes
+After 10 mins → removed automatically
+
+✅ Prevents stale data
+❌ Popular item may expire too early
+
+# 🏗️ 7. Two-Tiered Caching
+
+Uses two cache layers: local fast cache + remote shared cache.
+If local misses, system checks remote cache before database.
+
+📌 Example:
+App memory cache miss → Redis hit → no DB query needed
+
+✅ Very fast + scalable
+❌ More complex consistency handling
+
+# ⚔️ Quick Comparison
+
+| Strategy | Removes               |
+| -------- | --------------------- |
+| LRU      | Least recently used   |
+| LFU      | Least frequently used |
+| FIFO     | Oldest inserted       |
+| RR       | Random item           |
+| MRU      | Most recently used    |
+| TTL      | Expired item          |
+| Two-Tier | Uses layered caches   |
+
+# 🧠 Which One to Use?
+
+LRU is most common for general applications.
+LFU is strong for stable popular content.
+TTL is best when freshness matters.
+Two-tier caching is best for large distributed systems.
+
+📌 Example:
+News website → TTL
+E-commerce → LRU
+Streaming platform → Two-tier
+
+# ⚠️ Common Trade-offs
+
+Smart strategies improve hit rate but need extra tracking.
+Simple strategies are fast but may make worse eviction choices.
+
+📌 Example:
+LRU better than FIFO usually, but uses more metadata.
+
+# 🏁 Final Takeaway
+
+Cache eviction strategy decides how efficiently limited memory is used.
+Choosing the right one can dramatically improve performance and reduce backend load.
+
