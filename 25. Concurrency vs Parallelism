@@ -1,0 +1,151 @@
+# 🧠 1. What is Concurrency?
+
+Concurrency means a system can **handle multiple tasks at the same time by making progress on each**, even if only one task is executing at a given moment.
+
+In a single CPU system, this is achieved by **rapidly switching between tasks (context switching)**, giving the illusion that multiple tasks are running simultaneously.
+
+📌 Example:
+You are listening to music while coding.
+CPU switches between audio processing and code editor tasks so quickly that both appear to run together.
+
+
+# ⚙️ How Concurrency Works
+
+Concurrency is achieved using **threads**, where each thread represents a task.
+
+The CPU performs:
+
+* Context Saving → saves current task state
+* Context Switching → switches to another task
+* Context Loading → resumes new task
+
+This switching happens so fast that users perceive it as multitasking.
+
+📌 Example:
+Thread A (fetch API) waits → CPU switches to Thread B (render UI)
+
+
+# 🎯 Goal of Concurrency
+
+The main goal is to **maximize CPU utilization** and avoid idle time.
+
+If one task is waiting (like network or DB), CPU switches to another task instead of staying idle.
+
+📌 Example:
+Web server handling 100 users → while one request waits for DB, others are processed.
+
+# ⚠️ Cost of Concurrency
+
+Context switching has overhead because CPU must save and restore states.
+Too many threads can reduce performance instead of improving it.
+
+
+# 🌍 Real-World Examples of Concurrency
+
+Web Browser → loads images, scripts, UI simultaneously
+Web Server → handles multiple user requests
+Chat App → send + receive messages + update UI
+Game → input, rendering, sound handled together
+
+
+# 🧠 2. What is Parallelism?
+
+Parallelism means **multiple tasks are executed truly at the same time** using multiple CPU cores.
+
+Instead of switching, tasks are actually divided and run simultaneously on different cores.
+
+📌 Example:
+Video rendering → frame 1 processed on core 1, frame 2 on core 2
+
+
+# ⚙️ How Parallelism Works
+
+Modern CPUs have multiple cores, and each core can run a task independently.
+
+Steps:
+
+* Divide task into smaller subtasks
+* Assign each subtask to a core
+* Execute simultaneously
+* Combine results
+
+📌 Example:
+Array sum → split into parts → compute in parallel → merge result
+
+
+# 🎯 Goal of Parallelism
+
+The goal is to **reduce execution time** by doing multiple computations simultaneously.
+
+
+# 🌍 Real-World Examples of Parallelism
+
+Machine Learning → train batches on multiple GPUs
+Video Rendering → frames processed simultaneously
+Web Crawlers → multiple URLs fetched in parallel
+Big Data → Spark processes data across cluster
+
+
+# ⚔️ 3. Key Difference
+
+Concurrency = managing multiple tasks
+Parallelism = executing multiple tasks at same time
+
+👉 Concurrency is about **structure**
+👉 Parallelism is about **execution**
+
+
+# 📊 Comparison Table
+
+| Feature   | Concurrency          | Parallelism         |
+| --------- | -------------------- | ------------------- |
+| Execution | Interleaved          | Simultaneous        |
+| CPU       | Single or multi-core | Multi-core required |
+| Goal      | Responsiveness       | Speed               |
+| Example   | Web server           | ML training         |
+
+
+# 🧩 4. Types of Combinations
+
+# 1. Concurrent but NOT Parallel
+
+Tasks appear to run together but actually execute one at a time.
+
+📌 Example:
+Single-core CPU switching between tasks
+
+
+# 2. Parallel but NOT Concurrent
+
+One task split into subtasks and executed simultaneously.
+
+📌 Example:
+Rendering video frames in parallel
+
+
+# 3. Neither
+
+Tasks run one after another sequentially.
+
+📌 Example:
+Simple script executing line by line
+
+
+# 4. Both Concurrent and Parallel
+
+Multiple tasks running concurrently and also in parallel on multiple cores.
+
+📌 Example:
+Web server handling many users + each request processed in parallel
+
+# 🚀 5. Real System Example
+
+```id="arch"
+User Requests
+   ↓
+Load Balancer
+   ↓
+Multiple Servers (Parallel)
+   ↓
+Each server handles multiple requests (Concurrent)
+```
