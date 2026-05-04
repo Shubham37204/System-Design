@@ -1,0 +1,199 @@
+# 🧠 1. What is “State” in a System?
+
+State refers to **any data that is stored and remembered across multiple requests**.
+This includes things like user login sessions, shopping carts, preferences, or any ongoing interaction.
+
+📌 Example:
+When you log into a website and it remembers you → that is state.
+
+
+# 🟢 2. What is Stateful Architecture?
+
+In a stateful architecture, the server **remembers previous interactions** with the client.
+Each request depends on earlier requests because the server stores session data.
+
+📌 Example:
+In an e-commerce app, when you add items to your cart → server stores your cart → even if you navigate away, items remain.
+
+
+# ⚙️ How Stateful Systems Work
+
+When a user connects, the server stores session data either:
+
+* In memory (on that server)
+* In database or cache (like Redis)
+
+Future requests use this stored data instead of asking user to send everything again.
+
+
+# 🧩 Common Patterns in Stateful Systems
+
+# 1. Sticky Sessions
+
+Load balancer sends all requests from a user to the same server.
+Because that server has stored the user's session locally.
+
+📌 Example:
+User logs in → assigned to Server A → all requests go to Server A
+
+⚠️ Problem:
+If Server A crashes → session lost
+
+
+# 2. Centralized Session Store
+
+Session data is stored in a shared system like Redis.
+Any server can access session, so requests can go to any server.
+
+📌 Example:
+User logs in → session stored in Redis → any server can fetch it
+
+
+# ✅ Advantages of Stateful Systems
+
+* Better personalization (user history, preferences)
+* Seamless user experience (no need to send data repeatedly)
+* Faster operations in some cases (data already available)
+
+📌 Example:
+Netflix remembers where you paused video
+
+
+# ❌ Challenges of Stateful Systems
+
+* Hard to scale horizontally
+* Session management is complex
+* Failure of server can lose session
+
+📌 Example:
+If server crashes → user logged out suddenly
+
+
+# 🔵 3. What is Stateless Architecture?
+
+In stateless architecture, the server **does NOT remember anything about previous requests**.
+Each request is independent and must contain all required information.
+
+📌 Example:
+Weather API → every request must include location → server does not remember past queries
+
+
+# ⚙️ How Stateless Systems Work
+
+Each request carries:
+
+* Authentication data (token)
+* Required input data
+
+Server processes request → sends response → forgets everything.
+
+
+# 🧩 Common Patterns in Stateless Systems
+
+# 1. Token-Based Authentication (JWT)
+
+User logs in once → server gives token
+Client sends token in every request
+
+Server verifies token → no session storage needed
+
+📌 Example:
+Authorization: Bearer <JWT>
+
+
+# 2. Idempotent APIs
+
+Same request can be repeated safely and produces same result.
+Important for retries and distributed systems.
+
+📌 Example:
+PUT /user/123 → same request updates same data (no duplicates)
+
+
+# ✅ Advantages of Stateless Systems
+
+* Easy to scale horizontally
+* Simple architecture
+* No dependency on specific server
+* Better fault tolerance
+
+📌 Example:
+If one server fails → request goes to another server seamlessly
+
+
+# ❌ Challenges of Stateless Systems
+
+* No built-in memory → less personalization
+* Client must manage tokens/data
+* Larger request size
+
+📌 Example:
+Every API call must include authentication token
+
+
+# ⚔️ 4. Stateful vs Stateless (Comparison)
+
+| Feature     | Stateful              | Stateless       |
+| ----------- | --------------------- | --------------- |
+| Memory      | Stores state          | No memory       |
+| Requests    | Dependent             | Independent     |
+| Scalability | Difficult             | Easy            |
+| Failure     | Session loss possible | No session loss |
+| Complexity  | High                  | Low             |
+
+
+# 🧠 5. When to Use Stateful?
+
+Use when application needs **context, continuity, and personalization**.
+
+📌 Examples:
+
+* Shopping carts
+* Chat applications
+* Online gaming
+* Video streaming (watch history)
+
+
+# 🧠 6. When to Use Stateless?
+
+Use when system needs **scalability, simplicity, and high availability**.
+
+📌 Examples:
+
+* REST APIs
+* Microservices
+* Public APIs
+* CDN-based systems
+
+
+# 🔀 7. Hybrid Approach (Most Important 🔥)
+
+Modern systems use **both together**.
+
+👉 Stateless for scalability
+👉 Stateful for user experience
+
+📌 Example:
+Netflix:
+
+* Stateless backend APIs
+* Stateful user data (watch history, recommendations)
+
+
+# 🚀 8. Real System Architecture
+
+```id="arch"
+User
+ ↓
+Load Balancer
+ ↓
+Stateless API Servers
+ ↓
+Redis (State Storage)
+ ↓
+Database
+```
+
+👉 Servers are stateless
+👉 State stored externally
+
