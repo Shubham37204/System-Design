@@ -1,0 +1,512 @@
+What is an API?
+
+API stands for **Application Programming Interface**.
+
+At a high level, an API is a contract that defines:
+
+* What inputs a system accepts
+* What outputs it returns
+* How another system can interact with it
+
+Think of an API as a **middleman** between two pieces of software.
+
+Instead of directly accessing another application's code or database, applications communicate through APIs.
+
+📌 Example:
+
+You open Uber and request a ride.
+
+You don't directly communicate with Uber's database.
+
+Instead:
+
+```text
+Uber App
+    ↓
+Ride Request API
+    ↓
+Backend Services
+    ↓
+Database
+```
+
+The API receives your pickup and destination locations, processes them, and returns available drivers and estimated fare.
+
+Without APIs, every application would need direct access to every other application's internal code, which would be impossible to manage.
+
+# 🎯 The Core Purpose of APIs
+
+APIs exist to allow different systems to communicate in a controlled and predictable way.
+
+They hide implementation details and expose only what other systems need.
+
+📌 Example:
+
+A payment API may expose:
+
+```text
+processPayment(amount, cardDetails)
+```
+
+The client doesn't need to know:
+
+* Which database stores payments
+* Which bank is contacted
+* Which fraud checks run
+
+The API handles everything internally and returns a simple response.
+
+# ⚙️ How APIs Work
+
+Most APIs follow the Request → Response model.
+
+The client sends a request.
+
+The server processes it.
+
+The server returns a response.
+
+```text
+Client
+   ↓ Request
+API Server
+   ↓
+Database / Services
+   ↓ Response
+Client
+```
+
+📌 Example:
+
+Weather App:
+
+Request:
+
+```text
+Get weather for London
+```
+
+Response:
+
+```json
+{
+  "temperature": 22,
+  "condition": "Sunny"
+}
+```
+
+# 📥 API Inputs
+
+Every API expects specific inputs.
+
+If inputs are incorrect, the API cannot process the request.
+
+📌 Example:
+
+Google Maps API expects:
+
+```json
+{
+  "address": "New York"
+}
+```
+
+Valid Input:
+
+```json
+{
+  "address": "New York"
+}
+```
+
+Invalid Input:
+
+```json
+{
+  "personName": "John"
+}
+```
+
+The API doesn't know what to do with a person's name because it expects an address.
+
+This process is called **input validation**.
+
+# 📤 API Outputs
+
+APIs always return structured outputs.
+
+Most modern APIs return JSON.
+
+📌 Example:
+
+Successful Response:
+
+```json
+{
+  "latitude": 40.6892,
+  "longitude": -74.0445
+}
+```
+
+Error Response:
+
+```json
+{
+  "error": "Invalid address",
+  "code": 400
+}
+```
+
+A predictable output structure allows clients to reliably process responses.
+
+# 🏗️ How APIs Power Modern Applications
+
+Most applications follow:
+
+```text
+Frontend
+   ↓
+APIs
+   ↓
+Backend Services
+   ↓
+Database
+```
+
+The frontend is just a graphical interface.
+
+The real work happens in backend APIs.
+
+📌 Example: Uber
+
+When you:
+
+* Open app
+* Search destination
+* Request ride
+* Make payment
+
+Each action calls a different API.
+
+Possible APIs:
+
+```text
+Find Driver API
+Fare Calculation API
+Payment API
+Ride Tracking API
+Notification API
+```
+
+Together these APIs create the complete Uber experience.
+
+# 🌍 Types of APIs
+
+# 1. Public APIs (Open APIs)
+
+These APIs are available to external developers.
+
+Companies expose them so others can build applications using their services.
+
+📌 Example:
+
+YouTube Data API
+
+A developer can search videos without opening YouTube.
+
+Request:
+
+```text
+Search: "Machine Learning"
+```
+
+Response:
+
+```json
+[
+  {
+    "title": "ML Tutorial",
+    "views": 100000
+  }
+]
+```
+
+# 2. Private APIs (Internal APIs)
+
+These APIs are only used inside a company.
+
+Users never see them.
+
+📌 Example:
+
+Amazon Order Placement
+
+When you place an order:
+
+```text
+Order API
+     ↓
+Inventory API
+     ↓
+Payment API
+     ↓
+Shipping API
+```
+
+Each API performs one responsibility.
+
+This approach is common in microservices.
+
+# 3. Library APIs
+
+Not all APIs involve servers.
+
+Programming languages also expose APIs.
+
+📌 Example:
+
+Python:
+
+```python
+numbers.sort()
+```
+
+You don't need to know how sorting works internally.
+
+You simply call the API.
+
+Similarly:
+
+```python
+list.append()
+dict.get()
+sorted()
+```
+
+are all APIs.
+
+# 📡 API Communication Methods
+
+Different APIs communicate differently.
+
+# 1. REST API
+
+REST is the most common API style.
+
+It uses HTTP methods:
+
+```text
+GET
+POST
+PUT
+DELETE
+```
+
+📌 Example:
+
+Get all books:
+
+```http
+GET /books
+```
+
+Response:
+
+```json
+[
+  {
+    "id": 1,
+    "title": "Clean Code"
+  }
+]
+```
+
+Why REST is popular:
+
+* Simple
+* Scalable
+* Easy to understand
+* Uses JSON
+
+Most web applications today use REST.
+
+# 2. SOAP API
+
+SOAP is older and uses XML.
+
+It is more strict and standardized.
+
+📌 Common Uses:
+
+* Banking
+* Insurance
+* Healthcare
+
+Example:
+
+```xml
+<GetAccountBalance>
+  <Account>12345</Account>
+</GetAccountBalance>
+```
+
+SOAP is heavier than REST but provides stronger enterprise features.
+
+# 3. GraphQL
+
+GraphQL lets clients request exactly the data they need.
+
+REST often returns too much or too little data.
+
+GraphQL solves this.
+
+📌 Example:
+
+Request:
+
+```graphql
+{
+  user(id: 123) {
+    name
+    email
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "name": "Alice",
+  "email": "alice@example.com"
+}
+```
+
+Only requested fields are returned.
+
+This reduces network overhead.
+
+# 4. gRPC
+
+gRPC was developed by Google.
+
+Instead of JSON, it uses Protocol Buffers (Protobuf).
+
+Benefits:
+
+* Smaller payloads
+* Faster communication
+* Supports streaming
+
+📌 Common Uses:
+
+* Microservices
+* Internal service communication
+
+Large companies often use:
+
+```text
+External APIs → REST
+Internal APIs → gRPC
+```
+
+# 🔐 API Authentication
+
+Most APIs don't allow anonymous access.
+
+Authentication verifies who is making the request.
+
+Common methods:
+
+# API Keys
+
+```text
+api_key=abc123
+```
+
+Simple but limited.
+
+# JWT Tokens
+
+User logs in once.
+
+Server generates token.
+
+Client sends token with every request.
+
+```text
+Authorization: Bearer JWT_TOKEN
+```
+
+Very common in modern systems.
+
+# OAuth
+
+Used by:
+
+* Google Login
+* GitHub Login
+* Facebook Login
+
+Allows one service to access another securely.
+
+# ⚠️ Common API Errors
+
+| Code | Meaning               |
+| ---- | --------------------- |
+| 200  | Success               |
+| 201  | Resource Created      |
+| 400  | Bad Request           |
+| 401  | Unauthorized          |
+| 403  | Forbidden             |
+| 404  | Not Found             |
+| 429  | Rate Limited          |
+| 500  | Internal Server Error |
+
+📌 Example:
+
+Wrong API Key:
+
+```http
+401 Unauthorized
+```
+
+Too many requests:
+
+```http
+429 Too Many Requests
+```
+
+# 🚀 APIs in System Design
+
+In modern architectures almost everything communicates through APIs.
+
+```text
+Mobile App
+      ↓
+API Gateway
+      ↓
+User Service
+Order Service
+Payment Service
+Notification Service
+      ↓
+Database
+```
+
+This allows:
+
+* Independent development
+* Scalability
+* Reusability
+* Easier maintenance
+
+Without APIs, microservices would not exist.
+
+# 🏁 Final Takeaway
+
+An API is the communication layer that allows different software systems to interact safely and predictably.
+
+Modern applications are essentially collections of APIs working together behind a user interface. Whether it's Uber, Netflix, Instagram, Amazon, or ChatGPT, APIs are the backbone that connects frontend applications, backend services, databases, and third-party systems.
+
+

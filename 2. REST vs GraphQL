@@ -1,0 +1,624 @@
+Why Do We Need APIs?
+
+Modern applications are made of many components:
+
+* Mobile Apps
+* Web Frontends
+* Backend Services
+* Databases
+
+These components need a standard way to communicate.
+
+APIs provide that communication layer.
+
+The two most common API architectures today are:
+
+* REST
+* GraphQL
+
+Both solve the same problem:
+
+> How can a client request data from a server?
+
+But they solve it in very different ways.
+
+# 🚀 What is REST?
+
+REST (Representational State Transfer) is an architectural style introduced by Roy Fielding in 2000.
+
+REST is not a protocol like HTTP.
+
+Instead, it is a set of principles for designing APIs using HTTP.
+
+The central idea behind REST is:
+
+> Everything is treated as a resource.
+
+Examples:
+
+```text
+User
+Product
+Order
+Cart
+Payment
+```
+
+Each resource has its own URL.
+
+Example:
+
+```text
+/api/users/123
+/api/orders/456
+/api/products/789
+```
+
+A client interacts with resources using HTTP methods.
+
+# 🔧 REST HTTP Methods
+
+REST primarily uses four HTTP methods.
+
+### GET
+
+Used to retrieve data.
+
+Example:
+
+```http
+GET /api/users/123
+```
+
+Response:
+
+```json
+{
+  "id": 123,
+  "name": "John",
+  "email": "john@email.com"
+}
+```
+
+### POST
+
+Used to create data.
+
+Example:
+
+```http
+POST /api/users
+```
+
+Request:
+
+```json
+{
+  "name": "John",
+  "email": "john@email.com"
+}
+```
+
+### PUT / PATCH
+
+Used to update existing resources.
+
+Example:
+
+```http
+PUT /api/users/123
+```
+
+### DELETE
+
+Used to remove resources.
+
+Example:
+
+```http
+DELETE /api/users/123
+```
+
+# 🏗️ How REST Works
+
+Suppose a mobile application needs information about a user.
+
+The client sends:
+
+```http
+GET /api/users/123
+```
+
+The server:
+
+1. Receives request
+2. Queries database
+3. Creates JSON response
+4. Sends response back
+
+Flow:
+
+```text
+Client
+   ↓
+REST API
+   ↓
+Database
+   ↓
+JSON Response
+```
+
+# 📊 REST Response Codes
+
+REST APIs use HTTP status codes to indicate result.
+
+### 200 OK
+
+Request successful.
+
+### 201 Created
+
+Resource successfully created.
+
+### 400 Bad Request
+
+Invalid client input.
+
+### 401 Unauthorized
+
+Authentication required.
+
+### 404 Not Found
+
+Resource doesn't exist.
+
+### 500 Internal Server Error
+
+Unexpected server issue.
+
+# ✅ Advantages of REST
+
+### Simple to Understand
+
+URLs naturally map to business entities.
+
+Example:
+
+```text
+/users
+/orders
+/products
+```
+
+Developers immediately understand the purpose.
+
+### Stateless
+
+Each request contains all necessary information.
+
+Server doesn't need to remember previous requests.
+
+This makes REST easy to scale horizontally.
+
+### HTTP Caching
+
+REST works naturally with:
+
+* Browser Cache
+* CDN Cache
+* Reverse Proxies
+
+Example:
+
+```http
+GET /api/products
+```
+
+can be cached for thousands of users.
+
+### Mature Ecosystem
+
+REST has existed for over two decades.
+
+Almost every language, framework, and cloud provider supports it.
+
+# ❌ Problems with REST
+
+As applications became larger, REST started showing limitations.
+
+# Problem 1: Over-Fetching
+
+Client receives more data than needed.
+
+Example:
+
+Mobile app only needs:
+
+```json
+{
+  "name": "John",
+  "email": "john@email.com"
+}
+```
+
+But REST returns:
+
+```json
+{
+  "name": "John",
+  "email": "john@email.com",
+  "address": "...",
+  "phone": "...",
+  "createdAt": "...",
+  "updatedAt": "..."
+}
+```
+
+Most of the response is unused.
+
+This wastes bandwidth.
+
+# Problem 2: Under-Fetching
+
+Sometimes REST returns too little information.
+
+Example:
+
+First request:
+
+```http
+GET /users/123
+```
+
+Second request:
+
+```http
+GET /users/123/posts
+```
+
+Third request:
+
+```http
+GET /users/123/comments
+```
+
+The client must make multiple network calls.
+
+This increases latency.
+
+# Problem 3: Versioning
+
+APIs evolve over time.
+
+Old clients still depend on older responses.
+
+This often leads to:
+
+```text
+/v1/users
+/v2/users
+/v3/users
+```
+
+Maintaining multiple versions becomes expensive.
+
+# 🚀 What is GraphQL?
+
+GraphQL was developed by Facebook and released in 2015.
+
+Instead of organizing APIs around resources and URLs, GraphQL organizes APIs around data.
+
+The core idea is:
+
+> The client decides exactly what data it wants.
+
+Not the server.
+
+# ⚙️ How GraphQL Works
+
+Unlike REST:
+
+```text
+/users
+/orders
+/products
+```
+
+GraphQL usually exposes a single endpoint:
+
+```text
+/graphql
+```
+
+Client sends a query describing the required data.
+
+Example:
+
+```graphql
+query {
+  user(id: 123) {
+    firstName
+    email
+    posts {
+      title
+    }
+  }
+}
+```
+
+GraphQL server gathers data from databases and services and returns exactly what was requested.
+
+Response:
+
+```json
+{
+  "data": {
+    "user": {
+      "firstName": "John",
+      "email": "john@email.com",
+      "posts": [
+        {
+          "title": "GraphQL Basics"
+        }
+      ]
+    }
+  }
+}
+```
+
+# 🎯 Why GraphQL Was Created
+
+GraphQL was designed to solve REST's biggest weaknesses:
+
+* Over-fetching
+* Under-fetching
+* API versioning
+
+# Example: REST vs GraphQL
+
+Suppose a page needs:
+
+* User Name
+* Email
+* Posts
+
+REST:
+
+```http
+GET /users/123
+GET /users/123/posts
+```
+
+Two requests.
+
+GraphQL:
+
+```graphql
+query {
+  user(id: 123) {
+    name
+    email
+    posts {
+      title
+    }
+  }
+}
+```
+
+One request.
+
+# 🧩 GraphQL Schema
+
+GraphQL uses strongly typed schemas.
+
+A schema defines:
+
+* Available data
+* Relationships
+* Data types
+
+Example:
+
+```graphql
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+```
+
+This acts as a contract between client and server.
+
+# 🔍 GraphQL Queries
+
+Queries are used to fetch data.
+
+Equivalent to REST GET.
+
+Example:
+
+```graphql
+query {
+  user(id: 123) {
+    name
+    email
+  }
+}
+```
+
+# ✏️ GraphQL Mutations
+
+Mutations modify data.
+
+Equivalent to:
+
+* POST
+* PUT
+* PATCH
+* DELETE
+
+Example:
+
+```graphql
+mutation {
+  createUser(
+    name: "John"
+    email: "john@email.com"
+  ) {
+    id
+  }
+}
+```
+
+# 🔄 GraphQL Subscriptions
+
+Subscriptions provide real-time updates.
+
+When data changes, clients receive updates automatically.
+
+Example:
+
+```graphql
+subscription {
+  newMessage {
+    text
+    sender
+  }
+}
+```
+
+Useful for:
+
+* Chat Apps
+* Notifications
+* Live Scores
+* Stock Markets
+
+# ✅ Advantages of GraphQL
+
+### Precise Data Fetching
+
+Client receives exactly what it requests.
+
+No over-fetching.
+
+### Single Request
+
+Related data can be fetched together.
+
+No under-fetching.
+
+### Strong Typing
+
+Schema acts as documentation.
+
+Developers know exactly what data exists.
+
+### No API Versioning
+
+New fields can be added without breaking existing queries.
+
+### Built-in Real-Time Support
+
+Subscriptions provide real-time updates.
+
+# ❌ Challenges of GraphQL
+
+### More Complex
+
+Requires:
+
+* Schema
+* Resolvers
+* GraphQL Server
+
+REST can be built with basic HTTP.
+
+### Harder Caching
+
+REST naturally works with browser and CDN caching.
+
+GraphQL often uses POST requests, making caching harder.
+
+### Risk of Expensive Queries
+
+Clients can request deeply nested data.
+
+Example:
+
+```graphql
+User
+  → Posts
+      → Comments
+          → Likes
+```
+
+Poorly designed queries can overload databases.
+
+### Security Challenges
+
+Attackers may send extremely large queries.
+
+Depth limiting and query cost analysis are often required.
+
+# ⚔️ REST vs GraphQL
+
+| Feature           | REST           | GraphQL                |
+| ----------------- | -------------- | ---------------------- |
+| API Style         | Resource Based | Query Based            |
+| Endpoints         | Multiple       | Single                 |
+| Data Returned     | Server decides | Client decides         |
+| Over-Fetching     | Possible       | Avoided                |
+| Under-Fetching    | Possible       | Avoided                |
+| Caching           | Easy           | Harder                 |
+| Complexity        | Simple         | Higher                 |
+| Versioning        | Often required | Usually unnecessary    |
+| Real-Time Support | Extra setup    | Built-in subscriptions |
+
+# 🏢 When to Use REST
+
+REST is usually better when:
+
+* API is simple
+* Data relationships are straightforward
+* Heavy caching is needed
+* Public APIs are being built
+
+Examples:
+
+* Payment APIs
+* Authentication APIs
+* CRUD Applications
+
+# 🏢 When to Use GraphQL
+
+GraphQL is usually better when:
+
+* Frontend requirements change frequently
+* Multiple clients need different data
+* Mobile bandwidth is important
+* Data relationships are complex
+
+Examples:
+
+* Social Networks
+* Dashboards
+* SaaS Platforms
+* Mobile Applications
+
+
+# 🏁 Final Takeaway
+
+REST and GraphQL are two different approaches to API design.
+
+REST organizes APIs around resources and URLs, making it simple, scalable, and easy to cache.
+
+GraphQL organizes APIs around data requirements, giving clients precise control over what they fetch and reducing unnecessary network calls.
+
+Most modern companies use both:
+
+* REST for simple services and public APIs
+* GraphQL for complex frontend-driven applications
+
+Understanding the strengths and trade-offs of both is essential for designing scalable and maintainable systems.
+

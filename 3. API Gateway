@@ -1,0 +1,490 @@
+What is an API Gateway?
+
+An API Gateway is a server that sits between clients and backend services.
+
+Instead of clients talking directly to multiple services, they send all requests to the API Gateway.
+The gateway then decides where the request should go, applies security rules, performs validation, and returns the response.
+
+Think of it as the **single entry point** into your backend system.
+
+📌 Example:
+
+Without API Gateway:
+
+```text
+Mobile App
+    ├── User Service
+    ├── Payment Service
+    ├── Order Service
+    └── Inventory Service
+```
+
+The client must know every service.
+
+With API Gateway:
+
+```text
+Mobile App
+      ↓
+ API Gateway
+      ↓
+ ┌─────────────┐
+ │User Service │
+ │Order Service│
+ │Payment      │
+ │Inventory    │
+ └─────────────┘
+```
+
+The client only talks to the API Gateway.
+
+# 🤔 Why Do We Need an API Gateway?
+
+As applications grow, they are usually broken into multiple microservices.
+
+An e-commerce platform might have:
+
+* User Service
+* Product Service
+* Order Service
+* Inventory Service
+* Payment Service
+* Notification Service
+
+If clients communicate directly with all these services:
+
+* Clients become complex
+* Authentication is duplicated
+* Rate limiting is duplicated
+* Service locations become exposed
+* Security becomes harder
+
+An API Gateway centralizes these concerns.
+
+# 🏗️ Real World Example
+
+Suppose you're using Swiggy and click:
+
+```text
+Place Order
+```
+
+You think one request happens.
+
+In reality:
+
+```text
+Check User
+Check Restaurant
+Check Inventory
+Process Payment
+Assign Delivery Partner
+Send Notification
+```
+
+Multiple services are involved.
+
+Instead of the mobile app calling each service individually:
+
+```text
+Swiggy App
+      ↓
+ API Gateway
+      ↓
+ Order Service
+ Payment Service
+ Delivery Service
+ Notification Service
+```
+
+The API Gateway coordinates everything.
+
+# ⚙️ How API Gateway Works
+
+When a request arrives, it goes through several stages.
+
+```text
+Client
+   ↓
+API Gateway
+   ↓
+Authentication
+   ↓
+Rate Limiting
+   ↓
+Request Validation
+   ↓
+Load Balancing
+   ↓
+Backend Service
+   ↓
+Response
+```
+
+Let's understand each step.
+
+# 1️⃣ Request Reception
+
+The gateway receives every incoming request.
+
+Example:
+
+```http
+POST /api/orders
+```
+
+Request:
+
+```json
+{
+  "restaurantId": 45,
+  "items": ["Pizza"],
+  "address": "Delhi"
+}
+```
+
+The API Gateway becomes the first component that sees this request.
+
+# 2️⃣ Request Validation
+
+Before sending the request to backend services, the gateway validates it.
+
+Checks include:
+
+* Required fields exist
+* JSON format is valid
+* Headers are present
+* Data types are correct
+
+📌 Example:
+
+Missing address:
+
+```json
+{
+  "restaurantId": 45
+}
+```
+
+Gateway immediately returns:
+
+```http
+400 Bad Request
+```
+
+without bothering backend services.
+
+# 3️⃣ Authentication
+
+The gateway verifies the identity of the user.
+
+Common methods:
+
+* JWT Tokens
+* OAuth
+* API Keys
+* Certificates
+
+Example:
+
+```http
+Authorization: Bearer eyJhb...
+```
+
+Gateway verifies token before forwarding request.
+
+If token is invalid:
+
+```http
+401 Unauthorized
+```
+
+returned immediately.
+
+# 4️⃣ Authorization
+
+Authentication answers:
+
+> Who are you?
+
+Authorization answers:
+
+> What are you allowed to do?
+
+Example:
+
+Admin endpoint:
+
+```http
+DELETE /users/123
+```
+
+Normal users should not access it.
+
+Gateway checks permissions before routing request.
+
+If user lacks permission:
+
+```http
+403 Forbidden
+```
+
+# 5️⃣ Rate Limiting
+
+One user should not overload the system.
+
+The gateway limits request frequency.
+
+Example:
+
+```text
+100 requests/minute
+```
+
+User sends:
+
+```text
+101st request
+```
+
+Gateway returns:
+
+```http
+429 Too Many Requests
+```
+
+This protects backend services from abuse.
+
+# 6️⃣ Request Transformation
+
+Sometimes clients and services use different formats.
+
+The gateway can transform requests automatically.
+
+Example:
+
+Client sends:
+
+```json
+{
+  "address": "Connaught Place, Delhi"
+}
+```
+
+Delivery service expects:
+
+```json
+{
+  "lat": 28.63,
+  "lng": 77.21
+}
+```
+
+Gateway performs conversion before forwarding request.
+
+# 7️⃣ Service Discovery
+
+Microservices often scale dynamically.
+
+Today:
+
+```text
+Payment Service Instance 1
+```
+
+Tomorrow:
+
+```text
+Payment Service Instance 1
+Payment Service Instance 2
+Payment Service Instance 3
+```
+
+The gateway automatically discovers available instances.
+
+This ensures requests always reach healthy services.
+
+# 8️⃣ Load Balancing
+
+Suppose Order Service has:
+
+```text
+Order Server 1
+Order Server 2
+Order Server 3
+```
+
+Gateway distributes traffic among them.
+
+Example:
+
+```text
+Request 1 → Server 1
+Request 2 → Server 2
+Request 3 → Server 3
+```
+
+This prevents overload.
+
+# 9️⃣ Response Handling
+
+Backend services return responses.
+
+The gateway may:
+
+* Modify response structure
+* Filter sensitive fields
+* Compress response
+* Cache response
+
+Example:
+
+Backend:
+
+```json
+{
+  "order_reference": "ORD123",
+  "eta": "20 min"
+}
+```
+
+Gateway transforms to:
+
+```json
+{
+  "orderId": "ORD123",
+  "estimatedDelivery": "20 min"
+}
+```
+
+for client convenience.
+
+# 🔟 Caching
+
+Frequently requested data can be cached.
+
+Examples:
+
+* Product catalog
+* Movie details
+* Weather information
+
+Instead of hitting backend repeatedly:
+
+```text
+Gateway Cache
+      ↓
+Fast Response
+```
+
+This reduces latency and backend load.
+
+# 1️⃣1️⃣ Circuit Breaker
+
+What if a backend service becomes unhealthy?
+
+Example:
+
+```text
+Payment Service Down
+```
+
+Without protection:
+
+Thousands of requests continue hitting it.
+
+With circuit breaker:
+
+```text
+Gateway detects failures
+      ↓
+Stops forwarding requests
+      ↓
+Returns fallback response
+```
+
+This prevents cascading failures.
+
+# 1️⃣2️⃣ Logging & Monitoring
+
+The gateway records:
+
+* Request count
+* Error rate
+* Latency
+* User activity
+
+Example metrics:
+
+```text
+Requests/sec: 10,000
+Error Rate: 0.2%
+Avg Latency: 50ms
+```
+
+These metrics help operators monitor system health.
+
+# 🎯 Benefits of API Gateway
+
+### Simplifies Clients
+
+Clients talk to one endpoint.
+
+### Centralized Security
+
+Authentication and authorization managed in one place.
+
+### Traffic Control
+
+Rate limiting and load balancing become easier.
+
+### Better Monitoring
+
+All traffic passes through a single layer.
+
+### Easier Microservices Management
+
+Backend services remain hidden and independent.
+
+# ⚠️ Drawbacks of API Gateway
+
+### Single Point of Failure
+
+If API Gateway goes down:
+
+```text
+Entire system becomes inaccessible
+```
+
+Usually solved using multiple gateway instances.
+
+### Added Latency
+
+Every request now passes through an extra hop.
+
+### Complexity
+
+Gateway configuration can become difficult in large systems.
+
+# 🚀 Popular API Gateways
+
+### Cloud Providers
+
+* AWS API Gateway
+* Azure API Management
+* Google API Gateway
+
+### Open Source
+
+* Kong
+* NGINX
+* Traefik
+* HAProxy
+* Envoy
+
+# 🏁 Final Takeaway
+
+An API Gateway acts as the front door of a modern distributed system. Instead of exposing dozens of microservices directly to clients, it provides a single, secure, manageable entry point that handles routing, authentication, rate limiting, monitoring, caching, and many other operational concerns.
+
+Without API Gateways, large-scale microservice architectures quickly become difficult to manage. This is why companies like Netflix, Amazon, Uber, and Swiggy heavily rely on API Gateways in production systems.
+

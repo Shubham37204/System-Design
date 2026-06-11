@@ -1,68 +1,125 @@
-# 🚀 System Design Learning Repository
+﻿# Mini-Research-Agent
 
-Welcome to my **System Design** learning repository!  
-This repo is a **single-source collection** of everything I am learning about designing scalable, reliable, and efficient systems.
+[![Python](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-3.0-green)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-blue)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 
-## 📌 About This Repository
+A lightweight research assistant for developers. Mini-Research-Agent combines automated code review, analysis workflows, and visual findings tracking in a modular Python + FastAPI backend with a React + Vite frontend.
 
-This repository is built as a **personal knowledge base + interview prep resource** where I document:
+## Overview
 
-- Core system design concepts  
-- Real-world architecture patterns  
-- API design approaches  
-- Scalability techniques  
-- Notes from hands-on learning  
+Mini-Research-Agent is built to make research workflows easier to explore and review. The backend handles data ingestion, pipeline analysis, and API delivery. The frontend focuses on displaying findings, sessions, and telemetry in a clean, interactive UI.
 
-Everything is organized in a **simple and easy-to-understand way** so that it can be quickly revised before interviews.
+## Features
 
+- Automated code review and issue discovery
+- Analysis pipelines for structured evaluations
+- Findings visualization in the browser
+- Telemetry and session tracking for research workflows
+- Modular backend / frontend separation for easier extension
 
-## 🎯 Goals
+## Tech stack
 
-- Build strong fundamentals of system design  
-- Understand how large-scale systems work  
-- Prepare for **SDE interviews (Backend / Full Stack)**  
-- Learn through **practical examples + explanations**  
+| Layer | Technology |
+|---|---|
+| Backend | Python, FastAPI |
+| Frontend | React, Vite, TypeScript |
+| API | REST endpoints |
+| Deployment | Local dev / container-ready |
 
+## Folder structure
 
-## 🛠️ How to Use This Repo
+```text
+├── backend/             # FastAPI services: ingestion, analysis, API
+├── frontend/            # React + Vite application
+├── docs/                # Design notes, architecture references
+├── scripts/             # Setup and helper scripts
+└── README.md            # Project overview and quickstart
+```
 
-- Read topics in order if you're a beginner  
-- Jump to specific sections for quick revision  
-- Use it as **last-minute interview notes**  
-- Add your own learnings if you fork it  
+> Update these paths if your repository layout differs.
 
+## Quickstart
 
-## 📚 Learning Approach
+1. Clone the repository:
 
-I follow a simple approach:
+```bash
+git clone https://github.com/<username>/Mini-Research-Agent.git
+cd Mini-Research-Agent
+```
 
-1. Understand the concept  
-2. Break it into simple terms  
-3. Relate it to real-world systems  
-4. Write it down in my own words  
+2. Start the backend:
 
+```bash
+cd backend
+python -m venv .venv
+source .venv/Scripts/activate  # Windows
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
+3. Start the frontend:
 
-## 🚧 Work in Progress
+```bash
+cd ../frontend
+npm install
+npm run dev
+```
 
-This repository is continuously updated as I learn new concepts.
+4. Open the app at `http://localhost:5173`.
 
+## API examples
 
-## 💡 Why This Repo?
+### Get analysis summary
 
-System design can feel overwhelming.  
-This repo simplifies it into:
+```bash
+curl http://localhost:8000/api/analysis/summary
+```
 
-- Clear explanations  
-- Structured notes  
-- Interview-friendly content  
+### Create a new session
 
+```bash
+curl -X POST http://localhost:8000/api/sessions \
+  -H "Content-Type: application/json" \
+  -d '{"project": "example", "notes": "Initial scan"}'
+```
 
-## 🤝 Contributions
+### List findings
 
-This is a personal learning repo, but suggestions are always welcome!  
-Feel free to:
+```bash
+curl http://localhost:8000/api/findings
+```
 
-- Open an issue  
-- Suggest improvements  
-- Share better explanations  
+## Architecture
+
+The backend is responsible for:
+
+- Ingestion: collecting and preparing input data
+- Analysis: running pipeline stages and generating findings
+- API: exposing results and session metadata to the UI
+
+The frontend is responsible for:
+
+- Rendering analysis results
+- Showing session history and telemetry
+- Making findings easy to scan and explore
+
+## Future improvements
+
+- Add user authentication and session management
+- Support plugin-based analysis stages
+- Add export options for findings and reports
+- Improve filtering and search in the UI
+
+## Contribution
+
+Contributions are welcome. If you want to help:
+
+- Open an issue for bugs or enhancements
+- Create a pull request with a clear summary
+- Keep changes focused and easy to review
+
+## License
+
+This project is available under the MIT License if a `LICENSE` file is included.
